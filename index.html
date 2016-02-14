@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>LWユーザー検索</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('#button').click(function(){
+        $.ajax({
+            type: "POST",
+            url: "userselect.php",
+            dataType: 'json',
+            })
+            // 成功時の処理
+            .done(function(response){
+                $('p[result=""]').html('成功');
+                $('div[data-result=""]').html(JSON.stringify(response));
+            })
+            // 失敗時の処理
+            .fail(function(XMLHttpRequest,textStatus,errorThrown){
+                $('p[result=""]').html('失敗');
+                $('div[data-result=""]').html(XMLHttpRequest.status+':'+errorThrown);
+            });
+        });
+    });
+</script>
+</head>
+<body>
+<h3>近くの冒険者を検索</h3>
+  <p>
+  <button id="button">検索</button>
+  <p result=""></p>
+  <div data-result=""></div>
+  </p>
+</body>
+</html>
+
+
+
