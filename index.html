@@ -7,10 +7,17 @@
 <script type="text/javascript">
 $(function(){
     $('#button').click(function(){
+        var send_data;
+        send_data = {
+            //  テキストボックスの値を設定
+            level : $('input').val()
+        };
+        console.log(send_data);
         $.ajax({
             type: "POST",
             url: "userselect.php",
             dataType: 'json',
+            data: send_data,
             })
             // 成功時の処理
             .done(function(response){
@@ -20,6 +27,9 @@ $(function(){
             // 失敗時の処理
             .fail(function(XMLHttpRequest,textStatus,errorThrown){
                 $('p[result=""]').html('失敗');
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
                 $('div[data-result=""]').html(XMLHttpRequest.status+':'+errorThrown);
             });
         });
@@ -29,6 +39,7 @@ $(function(){
 <body>
 <h3>近くの冒険者を検索</h3>
   <p>
+  level:<input type="number" name="dataType" min="1" maxlength="600"/><br />
   <button id="button">検索</button>
   <p result=""></p>
   <div data-result=""></div>

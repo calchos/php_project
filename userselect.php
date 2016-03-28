@@ -3,17 +3,18 @@
 // JSON形式で出力するためにヘッダーを定義
 header("Content-Type: application/json; charset=utf-8");
 
-// To do 自分のレベルを$_POSTを使って入力処理で受け取るように変更する⇛弄っていないので対応できるか確認
-$level = 172;//$_POST['level'];
+// $_POSTでindex.htmlのAjax処理で値を渡す
+$level = (int)$_POST['level'];
 
-// To do レベルを入力していなかった場合もしくは整数以外が入力されたら例外処理する⇛弄っていないので対応できるか確認
-/*
-if(empty($level)){
-    throw new Exception("何も入力されていません");
-}elseif(!is_int($level)){
-    throw new Exception("不正な値です");
+// $_POST['level']がセットされていなかった場合はエラーを返す
+if (!isset($_POST['level'])) {
+    echo 'not set';
 }
-*/
+// $levelが空の場合はエラーを返す
+if(empty($level)){
+    echo json_encode("何も入力されていません",JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 // PDOでMySQLに接続
 try {
@@ -29,14 +30,14 @@ $stmt = $pdo->query("SELECT * FROM user_lists");
 // *注意* PHP5.5.0では非推奨になっている…。
 // cf. http://qiita.com/fantm21/items/891192da1a095e94c9e1
 while($rows = $stmt->fetch(PDO::FETCH_ASSOC)){
-        if(($level + 5) >= ($rows['level']) && ($level - 30) <= ($rows['level'])){
-            $user_lists[]=array(
-            'name'=>$rows['name'],
-            'level'=>$rows['level'],
-            'synthetic_strength'=>$rows['synthetic_strength'],
-            'mainjob'=>$rows['mainjob'],
-            'isKillerEquiped'=>$rows['isKillerEquiped']
-            );
+    if(($level + 5) >= ($rows['level']) && ($level - 30) <= ($rows['level'])){
+        $user_lists[]=array(
+        'name'=>$rows['name'],
+        'level'=>$rows['level'],
+        'synthetic_strength'=>$rows['synthetic_strength'],
+        'mainjob'=>$rows['mainjob'],
+        'isKillerEquiped'=>$rows['isKillerEquiped']
+        );
     }
 }
 
